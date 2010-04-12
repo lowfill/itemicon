@@ -4,9 +4,9 @@
  *
  * @package ElggItemIcon
  * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
- * @author Diego Andrés Ramírez Aragón <diego@somosmas.org>
- * @copyright Corporación Somos más - 2009
- * @link http://www.somosmas.org
+ * @author Diego Andrés Ramírez Aragón <dramirezaragon@gmail.com>
+ * @copyright Corporación Somos más - 2009; Diego Andrés Ramírez Aragón 2010
+ * @link http://github.com/lowfill/itemicon
  *
  * @uses get_input("item_guid")
  * @uses get_input("size")
@@ -15,7 +15,6 @@ global $CONFIG;
 $item = $vars['entity'];
 
 $subtype = $item->getSubtype();
-//@todo Autodetect registered types or make this configurable
 if (($item instanceof ElggObject) && in_array($subtype,$CONFIG->itemicon)) {
   // Get size
   if (!in_array($vars['size'],array('small','medium','large','tiny','master','topbar'))){
