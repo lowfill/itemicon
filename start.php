@@ -4,9 +4,9 @@
  *
  * @package ElggItemIcon
  * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
- * @author Diego Andrés Ramírez Aragón <diego@somosmas.org>
- * @copyright Corporación Somos más - 2009
- * @link http://www.somosmas.org
+ * @author Diego Andrés Ramírez Aragón <dramirezaragon@gmail.com>
+ * @copyright Corporación Somos más - 2009; Diego Andrés Ramírez Aragón 2010
+ * @link http://github.com/lowfill/itemicon
  */
 
 /**
@@ -15,8 +15,9 @@
  * Register css and handlers
  */
 function itemicon_init(){
+  global $CONFIG;
 
-  extend_view("css","itemicon/css");
+  elgg_extend_view("css","itemicon/css");
 
   register_page_handler('itemicon','itemicon_icon_page_handler');
 
@@ -26,6 +27,10 @@ function itemicon_init(){
   register_plugin_hook('entity:icon:url', 'object', 'itemicon_icon_hook');
   register_plugin_hook('display', 'view', 'itemicon_overwrite_hook');
 
+  if(is_plugin_enabled('blogextended')){
+      $CONFIG->itemicon[]='blog';
+      elgg_extend_view('blog/fields_after','itemicon/add');
+  }
 }
 
 /**
@@ -45,20 +50,20 @@ function itemicon_icon_hook($hook, $entity_type, $returnvalue, $params){
     $subtype = $entity->getSubtype();
     $viewtype = $params['viewtype'];
     $size = $params['size'];
-     
+
     if ($icontime = $entity->icontime) {
       $icontime = "{$icontime}";
     } else {
       $icontime = "default";
     }
-     
+
     $filehandler = new ElggFile();
     $filehandler->owner_guid = $entity->owner_guid;
     $filehandler->setFilename("icons/{$entity->guid}-{$entity->title}{$ize}.jpg");
 
     if ($filehandler->exists()) {
       $url = $CONFIG->url . "pg/itemicon/{$entity->guid}/$size/$icontime.jpg";
-       
+
       return $url;
     }
   }
@@ -68,7 +73,7 @@ function itemicon_icon_hook($hook, $entity_type, $returnvalue, $params){
  * Itemicon url page handler
  */
 function itemicon_icon_page_handler($page) {
-   
+
   global $CONFIG;
 
   // The username should be the file we're getting
@@ -94,7 +99,6 @@ function itemicon_icon_page_handler($page) {
 function itemicon_icon_handler($event, $object_type, $object){
   global $CONFIG;
   $subtype = $object->getSubtype();
-  //@todo Autodetect registered types or make this configurable
   if(in_array($subtype,$CONFIG->itemicon)){
     switch($event){
       case "create":
@@ -168,15 +172,15 @@ function itemicon_overwrite_hook($hook, $entity_type, $returnvalue, $params){
     $entity = get_entity($entity_id);
     $subtype = $entity->getSubtype();
     $icon = $entity->icon;
-    if(in_array($subtype,array("blog","project","service")) && !empty($icon)){
+    if(in_array($subtype,$CONFIG->itemicon) && !empty($icon)){
       $vars["entity"]=$entity;
       $view_file = "itemicon/view";
       ob_start();
-      
+
       $viewtype = elgg_get_viewtype();
       $view_location = elgg_get_view_location($view_file);
       include($view_location . "{$viewtype}/{$view_file}.php");
-      
+
       $content = ob_get_clean();
       return $content;
     }
