@@ -13,7 +13,7 @@
 <p>
 	<label><?php echo elgg_echo("itemicon:icon"); ?><br />
 	<?php
-		echo elgg_view("input/file",array('internalname' => 'icon'));
+		echo elgg_view("input/file",array('name' => 'icon'));
 	?>
 	</label>
 </p>
