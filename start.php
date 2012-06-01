@@ -19,15 +19,15 @@ function itemicon_init(){
 
   elgg_extend_view("css","itemicon/css");
 
-  register_page_handler('itemicon','itemicon_icon_page_handler');
+  elgg_register_page_handler('itemicon','itemicon_icon_page_handler');
 
-  register_elgg_event_handler("create","object","itemicon_icon_handler");
-  register_elgg_event_handler("update","object","itemicon_icon_handler");
+  elgg_register_event_handler("create","object","itemicon_icon_handler");
+  elgg_register_event_handler("update","object","itemicon_icon_handler");
 
-  register_plugin_hook('entity:icon:url', 'object', 'itemicon_icon_hook');
-  register_plugin_hook('display', 'view', 'itemicon_overwrite_hook');
+  elgg_register_plugin_hook_handler('entity:icon:url', 'object', 'itemicon_icon_hook');
+  elgg_register_plugin_hook_handler('display', 'view', 'itemicon_overwrite_hook');
 
-  if(is_plugin_enabled('blogextended')){
+  if(elgg_is_active_plugin('blogextended')){
       $CONFIG->itemicon[]='blog';
       elgg_extend_view('blog/fields_after','itemicon/add');
   }
